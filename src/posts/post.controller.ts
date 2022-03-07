@@ -5,12 +5,12 @@ import RequestWithUser from '../interfaces/requestWithUser.interface'
 import authMiddleware from '../middlewares/auth.middleware'
 import validationMiddleware from '../middlewares/validation.middleware'
 import CreatePostDto from './dto/createPost.dto'
-import PostsService from './posts.service'
+import PostService from './post.service'
 
-class PostsController implements Controller {
+class PostController implements Controller {
   public path = '/posts'
   public router = express.Router()
-  private readonly postsService = new PostsService()
+  private readonly postService = new PostService()
   constructor() {
     this.initializeRoutes()
   }
@@ -35,7 +35,7 @@ class PostsController implements Controller {
   }
 
   private getAllPosts = async (_req: Request, res: Response) => {
-    const posts = await this.postsService.getAllPosts()
+    const posts = await this.postService.getAllPosts()
     return res.send(posts)
   }
 
@@ -45,7 +45,7 @@ class PostsController implements Controller {
     next: NextFunction
   ) => {
     const { id } = req.params
-    const post = await this.postsService.getPostById(id)
+    const post = await this.postService.getPostById(id)
     if (post) {
       return res.send(post)
     } else {
@@ -55,7 +55,7 @@ class PostsController implements Controller {
 
   private createPost = async (req: RequestWithUser, res: Response) => {
     const input: CreatePostDto = { ...req.body, author: req.user }
-    const post = await this.postsService.createPost(input)
+    const post = await this.postService.createPost(input)
     return res.send(post)
   }
 
@@ -66,7 +66,7 @@ class PostsController implements Controller {
   ) => {
     const { id } = req.params
     const input = req.body
-    const post = await this.postsService.updatePost(id, input)
+    const post = await this.postService.updatePost(id, input)
     if (post) {
       return res.send(post)
     } else {
@@ -80,7 +80,7 @@ class PostsController implements Controller {
     next: NextFunction
   ) => {
     const { id } = req.params
-    const post = await this.postsService.deletePost(id)
+    const post = await this.postService.deletePost(id)
     if (post) {
       return res.send(post)
     } else {
@@ -89,4 +89,4 @@ class PostsController implements Controller {
   }
 }
 
-export default PostsController
+export default PostController

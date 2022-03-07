@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import UserAlreadyExistExeption from '../exceptions/userAlreadyExist.exception'
 import Controller from '../interfaces/controller.interface'
 import CreateUserDto from '../users/dto/user.dto'
-import UsersService from '../users/users.service'
+import UserService from '../users/user.service'
 import LoginDto from './dto/login.dto'
 import WrongCredentialsExeption from '../exceptions/wrongCredentials.exception'
 import validationMiddleware from '../middlewares/validation.middleware'
@@ -16,7 +16,7 @@ import { AUTHORIZATION, JWT_SECRET } from '../constants'
 class AuthController implements Controller {
   public path = '/auth'
   public router = express.Router()
-  private readonly usersSerice = new UsersService()
+  private readonly userSerice = new UserService()
   constructor() {
     this.initializeRoutes()
   }
@@ -41,12 +41,12 @@ class AuthController implements Controller {
     next: express.NextFunction
   ) => {
     const userData: CreateUserDto = req.body
-    const userExist = await this.usersSerice.findOneUser(userData.email)
+    const userExist = await this.userSerice.findOneUser(userData.email)
     if (userExist) {
       next(new UserAlreadyExistExeption(userData.email))
     } else {
       const hashedPassword = await bcrypt.hash(userData.password, 10)
-      const newUser = await this.usersSerice.createUser({
+      const newUser = await this.userSerice.createUser({
         ...userData,
         password: hashedPassword
       })
@@ -61,7 +61,7 @@ class AuthController implements Controller {
     next: express.NextFunction
   ) => {
     const loginData: LoginDto = req.body
-    const user = await this.usersSerice.findOneUser(loginData.email)
+    const user = await this.userSerice.findOneUser(loginData.email)
     if (user) {
       const isPasswordMatching = await bcrypt.compare(
         loginData.password,

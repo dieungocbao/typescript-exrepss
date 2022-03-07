@@ -17,7 +17,8 @@ const postSchema = new mongoose.Schema<PostSchemaType>({
     type: String
   },
   author: {
-    type: String
+    type: String,
+    ref: 'User'
   }
 })
 

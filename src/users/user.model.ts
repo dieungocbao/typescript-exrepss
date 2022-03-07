@@ -4,6 +4,15 @@ import IUser from './user.interface'
 
 type UserSchemaType = IUser & mongoose.Document
 
+const addressSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: v4
+  },
+  street: String,
+  city: String
+})
+
 const userSchema = new mongoose.Schema<UserSchemaType>({
   _id: {
     type: String,
@@ -19,9 +28,10 @@ const userSchema = new mongoose.Schema<UserSchemaType>({
   password: {
     type: String,
     required: true
-  }
+  },
+  address: addressSchema
 })
 
-const userModel = mongoose.model<UserSchemaType>('user', userSchema)
+const userModel = mongoose.model<UserSchemaType>('User', userSchema)
 
 export default userModel
