@@ -2,6 +2,7 @@ import express, { IRouter } from 'express'
 import bodyParser from 'body-parser'
 import errorMiddleware from './middlewares/error.middleware'
 import mongoose from 'mongoose'
+import cookieParser from 'cookie-parser'
 
 interface AppController {
   router: IRouter
@@ -23,6 +24,7 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(bodyParser.json())
+    this.app.use(cookieParser())
   }
 
   private initializeErrorHandling() {
