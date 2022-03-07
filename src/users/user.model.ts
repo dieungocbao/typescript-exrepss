@@ -10,7 +10,8 @@ const addressSchema = new mongoose.Schema({
     default: v4
   },
   street: String,
-  city: String
+  city: String,
+  country: String
 })
 
 const userSchema = new mongoose.Schema<UserSchemaType>({

@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import CreateAddressDto from "./address.dto";
 
 class CreateUserDto {
   @IsString()
@@ -10,6 +11,8 @@ class CreateUserDto {
   @IsNotEmpty()
   @MinLength(6)
   public password: string
+
+  public address: CreateAddressDto
 }
 
 export default CreateUserDto
