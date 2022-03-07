@@ -1,5 +1,8 @@
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
+import PostNotFoundException from '../exceptions/postNotFound.exeption'
 import Controller from '../interfaces/controller.interface'
+import validationMiddleware from '../middlewares/validation.middleware'
+import CreatePostDto from './dto/createPost.dto'
 import PostsService from './posts.service'
 
 class PostsController implements Controller {
@@ -13,8 +16,8 @@ class PostsController implements Controller {
   public initializeRoutes() {
     this.router.get(this.path, this.getAllPosts)
     this.router.get(`${this.path}/:id`, this.getPostById)
-    this.router.post(this.path, this.createPost)
-    this.router.patch(`${this.path}/:id`, this.updatePost)
+    this.router.post(this.path, validationMiddleware(CreatePostDto), this.createPost)
+    this.router.patch(`${this.path}/:id`, validationMiddleware(CreatePostDto, true), this.updatePost)
     this.router.delete(`${this.path}/:id`, this.deletePost)
   }
 
@@ -23,10 +26,18 @@ class PostsController implements Controller {
     return res.send(posts)
   }
 
-  private getPostById = async (req: Request, res: Response) => {
+  private getPostById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     const { id } = req.params
     const post = await this.postsService.getPostById(id)
-    return res.send(post)
+    if (post) {
+      return res.send(post)
+    } else {
+      next(new PostNotFoundException(id))
+    }
   }
 
   private createPost = async (req: Request, res: Response) => {
@@ -35,17 +46,33 @@ class PostsController implements Controller {
     return res.send(post)
   }
 
-  private updatePost = async (req: Request, res: Response) => {
+  private updatePost = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     const { id } = req.params
     const input = req.body
     const post = await this.postsService.updatePost(id, input)
-    return res.send(post)
+    if (post) {
+      return res.send(post)
+    } else {
+      next(new PostNotFoundException(id))
+    }
   }
 
-  private deletePost = async (req: Request, res: Response) => {
+  private deletePost = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     const { id } = req.params
     const post = await this.postsService.deletePost(id)
-    return res.send(post)
+    if (post) {
+      return res.send(post)
+    } else {
+      next(new PostNotFoundException(id))
+    }
   }
 }
 

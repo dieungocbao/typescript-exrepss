@@ -1,7 +1,14 @@
-interface CreatePostInput {
-  title: string
-  content: string
-  author: string
+import { IsString } from 'class-validator'
+
+class CreatePostDto {
+  @IsString()
+  public author: string
+
+  @IsString()
+  public content: string
+
+  @IsString()
+  public title: string
 }
 
-export default CreatePostInput
+export default CreatePostDto

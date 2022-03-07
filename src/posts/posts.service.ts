@@ -1,5 +1,4 @@
 import CreatePostInput from './dto/createPost.dto'
-import UpdatePostInput from './dto/updatePost.dto'
 import IPost from './post.interface'
 import postModel from './posts.model'
 
@@ -21,7 +20,7 @@ class PostsService {
 
   updatePost = async (
     id: string,
-    input: UpdatePostInput
+    input: CreatePostInput
   ): Promise<IPost | null> => {
     return this.postModel.findByIdAndUpdate(id, input, { new: true })
   }

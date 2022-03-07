@@ -1,5 +1,6 @@
 import express, { IRouter } from 'express'
 import bodyParser from 'body-parser'
+import errorMiddleware from './middlewares/error.middleware'
 
 interface AppController {
   router: IRouter
@@ -15,10 +16,15 @@ class App {
 
     this.initializeMiddlewares()
     this.initializeControllers(controllers)
+    this.initializeErrorHandling()
   }
 
   private initializeMiddlewares() {
     this.app.use(bodyParser.json())
+  }
+
+  private initializeErrorHandling() {
+    this.app.use(errorMiddleware)
   }
 
   private initializeControllers(controllers: Array<AppController>) {
