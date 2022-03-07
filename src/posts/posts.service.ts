@@ -1,6 +1,6 @@
 import CreatePostInput from './dto/createPost.dto'
 import IPost from './post.interface'
-import postModel from './posts.model'
+import postModel from './post.model'
 
 class PostsService {
   private readonly postModel = postModel

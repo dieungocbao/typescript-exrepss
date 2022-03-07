@@ -1,6 +1,7 @@
 import express, { IRouter } from 'express'
 import bodyParser from 'body-parser'
 import errorMiddleware from './middlewares/error.middleware'
+import mongoose from 'mongoose'
 
 interface AppController {
   router: IRouter
@@ -14,6 +15,7 @@ class App {
     this.app = express()
     this.port = port
 
+    this.connectDatabse()
     this.initializeMiddlewares()
     this.initializeControllers(controllers)
     this.initializeErrorHandling()
@@ -36,6 +38,15 @@ class App {
   public listen() {
     this.app.listen(this.port, () => {
       console.log(`App listening on the port ${this.port}`)
+    })
+  }
+
+  private connectDatabse() {
+    const URI = process.env.MONGO_URI
+
+    mongoose.connect(`${URI}`, {}, (err) => {
+      if (err) throw err
+      console.log('MongoDB connected...')
     })
   }
 }
